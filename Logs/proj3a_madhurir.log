@@ -1,0 +1,144 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+74       !                                                             /*opens a log file to write to*/
+75         
+76         *********************************************************************
+77         *  Assignment:    Final Project
+78         *
+79         *  Description:   Part 3: Analysis for Attackers
+80         *
+81         *  Name:          Madhuri Raman
+82         *
+83         *  Date:          April 30th, 2024
+84         *-------------------------------------------------------------------
+85         *  Job name:      proj3a_madhurir.sas
+86         *
+87         *  Purpose:       Identify best shot takers on Real Madrid.
+88         *
+89         *  Language:      SAS, VERSION 9.4
+90         *
+91         *  Input:         UCL datasets:
+92         				  attempts			
+93         *
+94         *  Output:        RTF file
+95         *
+96         ********************************************************************;
+97         
+98         OPTIONS NODATE MPRINT MERGENOBY=WARN VARINITCHK=WARN NOFULLSTIMER;
+99         ODS _ALL_ CLOSE;
+100        
+101        
+102        LIBNAME ucl "/home/u63529063/bios669/FinalProject/data/sasdatasets" ;
+NOTE: Libref UCL refers to the same physical library as _TEMP6.
+NOTE: Libref UCL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/u63529063/bios669/FinalProject/data/sasdatasets
+103        
+104        DATA att;
+105        	SET ucl.attempts;
+106        	DROP serial;
+107        RUN;
+
+NOTE: There were 546 observations read from the data set UCL.ATTEMPTS.
+NOTE: The data set WORK.ATT has 546 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+2                                                          The SAS System
+
+      
+
+108        
+109        
+110        PROC SQL;
+111        	CREATE TABLE best_shottakers AS
+112        		SELECT
+113        			player_name,
+114        			position,
+115        			on_target,
+116        			off_target,
+117        			blocked,
+118        			total_attempts,
+119        			on_target/off_target AS TargetRatio FORMAT=8.2 LABEL="Ratio of Shots /On Target vs. Off Target",
+120        			on_target/total_attempts AS PercentageOnTarget FORMAT=PERCENT8.2
+121        		FROM att
+122        		WHERE
+123        			club IN ("Real Madrid") AND
+124        			total_attempts > 5
+125        		ORDER BY
+126        			TargetRatio DESC,
+127        			PercentageOnTarget DESC;
+NOTE: Table WORK.BEST_SHOTTAKERS created, with 8 rows and 8 columns.
+
+128        QUIT;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+129        
+130        PROC PRINT DATA=best_shottakers;
+131        RUN;
+
+WARNING: No output destinations active.
+NOTE: There were 8 observations read from the data set WORK.BEST_SHOTTAKERS.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+132        
+133        /*RTF output, since there are some "weird" characters in player and club names*/
+134        OPTIONS MISSING=' ';
+135        ODS RTF FILE="&outdir/Outputs/&job._&onyen..RTF" STYLE=JOURNAL BODYTITLE;
+NOTE: Writing RTF Body file: /home/u63529063/bios669/FinalProject/Outputs/proj3a_madhurir.RTF
+136        
+137        TITLE "2021/2022 UEFA Champions League: Top Shot Takers on Real Madrid";
+138        FOOTNOTE1 "Table 4.";
+139        FOOTNOTE2 " ";
+140        FOOTNOTE3 "Job &job._&onyen run on &sysdate at &systime";
+141        PROC REPORT DATA=best_shottakers;
+142        	COLUMN (player_name position) ('Raw Data' on_target total_attempts) ('Shot Statistics' TargetRatio PercentageOnTarget);
+143        	DEFINE player_name / DISPLAY "Player"
+144        					     STYLE(COLUMN)=[fontsize=8pt just=left CELLWIDTH=1.5CM]
+145        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+146        	DEFINE position / DISPLAY "Position"
+147        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+3                                                          The SAS System
+
+148        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b JUST=CENTER CELLWIDTH=2CM];
+149        	DEFINE on_target / DISPLAY "Shots On Target"
+150        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2.5CM]
+151        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=2.5CM];
+152        	DEFINE total_attempts / DISPLAY "Total Shot Attempts"
+153        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=3CM]
+154        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=3CM];
+155        	DEFINE TargetRatio / DISPLAY "Ratio of Shots /On Target vs. Off Target"
+156        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=3CM]
+157        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=3CM];
+158        	DEFINE PercentageOnTarget / DISPLAY "Percentage of /Shots on Target"
+159        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=3CM]
+160        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=3CM];
+161        	COMPUTE PercentageOnTarget;
+162        		IF (PercentageOnTarget > 0.5) THEN DO;
+163        			CALL DEFINE(_ROW_,"STYLE","STYLE=[BACKGROUND=cxD5F5E3]");
+164        		END;
+165        	ENDCOMP;
+166        	
+167        RUN;
+
+NOTE: There were 8 observations read from the data set WORK.BEST_SHOTTAKERS.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+168        
+169        	
+170        ODS RTF CLOSE;
+171        
+172        proc printto; run;
+

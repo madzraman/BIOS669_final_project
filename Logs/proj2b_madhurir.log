@@ -1,0 +1,143 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+74       !                                                             /*opens a log file to write to*/
+75         
+76         *********************************************************************
+77         *  Assignment:    Final Project
+78         *
+79         *  Description:   Part 2: Analysis for defenders
+80         *
+81         *  Name:          Madhuri Raman
+82         *
+83         *  Date:          April 30th, 2024
+84         *-------------------------------------------------------------------
+85         *  Job name:      proj2b_madhurir.sas
+86         *
+87         *  Purpose:       Identify best tacklers on Real Madrid.
+88         *
+89         *  Language:      SAS, VERSION 9.4
+90         *
+91         *  Input:         UCL datasets:
+92         				  defending			
+93         *
+94         *  Output:        RTF file
+95         *
+96         ********************************************************************;
+97         
+98         OPTIONS NODATE MPRINT MERGENOBY=WARN VARINITCHK=WARN NOFULLSTIMER;
+99         ODS _ALL_ CLOSE;
+100        
+101        
+102        LIBNAME ucl "/home/u63529063/bios669/FinalProject/data/sasdatasets" ;
+NOTE: Libref UCL refers to the same physical library as _TEMP1.
+NOTE: Libref UCL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/u63529063/bios669/FinalProject/data/sasdatasets
+103        
+104        DATA def;
+105        	SET ucl.defending;
+106        	DROP serial;
+107        RUN;
+
+NOTE: There were 627 observations read from the data set UCL.DEFENDING.
+NOTE: The data set WORK.DEF has 627 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+2                                                          The SAS System
+
+      
+
+108        
+109        
+110        PROC SQL;
+111        	CREATE TABLE top_tacks AS
+112        		SELECT
+113        			player_name,
+114        			position,
+115        			tackles,
+116        			t_won,
+117        			match_played,
+118        			t_won/tackles AS PercentageTacklesWon FORMAT=PERCENT8.2 LABEL="Percentage of Tackles Won",
+119        			t_won/match_played AS AvgTacklesWonPerMatch FORMAT=8.2,
+120        			tackles/match_played AS AvgTacklesAttemptedPerMatch FORMAT=8.2
+121        		FROM def
+122        		WHERE
+123        			club IN ("Real Madrid") AND
+124        			tackles > 2
+125        		ORDER BY
+126        			PercentageTacklesWon DESC,
+127        			AvgTacklesWonPerMatch DESC,
+128        			AvgTacklesAttemptedPerMatch DESC;
+NOTE: Table WORK.TOP_TACKS created, with 11 rows and 8 columns.
+
+129        QUIT;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+130        
+131        PROC PRINT DATA=top_tacks;
+132        RUN;
+
+WARNING: No output destinations active.
+NOTE: There were 11 observations read from the data set WORK.TOP_TACKS.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+133        
+134        /*RTF output, since there are some "weird" characters in player and club names*/
+135        OPTIONS MISSING=' ';
+136        ODS RTF FILE="&outdir/Outputs/&job._&onyen..RTF" STYLE=JOURNAL BODYTITLE;
+NOTE: Writing RTF Body file: /home/u63529063/bios669/FinalProject/Outputs/proj2b_madhurir.RTF
+137        
+138        TITLE "2021/2022 UEFA Champions League: Top Tacklers on Real Madrid";
+139        FOOTNOTE1 "Table 3.";
+140        FOOTNOTE2 " ";
+141        FOOTNOTE3 "Job &job._&onyen run on &sysdate at &systime";
+142        PROC REPORT DATA=top_tacks(obs=10);
+143        	COLUMN (player_name position) ('Tackling Statistics' PercentageTacklesWon AvgTacklesWonPerMatch
+143      ! AvgTacklesAttemptedPerMatch);
+144        	DEFINE player_name / DISPLAY "Player"
+145        					     STYLE(COLUMN)=[fontsize=8pt just=left CELLWIDTH=2CM]
+146        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+3                                                          The SAS System
+
+147        	DEFINE position / DISPLAY "Position"
+148        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+149        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b JUST=CENTER CELLWIDTH=2CM];
+150        	DEFINE PercentageTacklesWon / DISPLAY "Percentage of /Tackles Won overall"
+151        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=4CM]
+152        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=4CM];
+153        	DEFINE AvgTacklesWonPerMatch / DISPLAY "Average Tackles /Won per match"
+154        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=3CM]
+155        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=3CM];
+156        	DEFINE AvgTacklesAttemptedPerMatch / DISPLAY "Average Tackles /Attempted per match"
+157        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=4CM]
+158        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=4CM];
+159        	COMPUTE PercentageTacklesWon;
+160        		IF (PercentageTacklesWon > 0.5) THEN DO;
+161        			CALL DEFINE(_ROW_,"STYLE","STYLE=[BACKGROUND=cxD5F5E3]");
+162        		END;
+163        	ENDCOMP;
+164        	
+165        RUN;
+
+NOTE: There were 10 observations read from the data set WORK.TOP_TACKS.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+166        
+167        	
+168        ODS RTF CLOSE;
+169        
+170        proc printto; run;
+

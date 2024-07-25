@@ -1,0 +1,141 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+74       !                                                             /*opens a log file to write to*/
+75         
+76         *********************************************************************
+77         *  Assignment:    Final Project
+78         *
+79         *  Description:   Part 1: Goalkeeper analysis
+80         *
+81         *  Name:          Madhuri Raman
+82         *
+83         *  Date:          April 30th, 2024
+84         *-------------------------------------------------------------------
+85         *  Job name:      proj1_madhurir.sas
+86         *
+87         *  Purpose:       Identify best performing goalkeepers in UCL 2021/2022 season.
+88         *
+89         *  Language:      SAS, VERSION 9.4
+90         *
+91         *  Input:         UCL datasets:
+92         				  goalkeepers			
+93         *
+94         *  Output:        RTF file
+95         *
+96         ********************************************************************;
+97         
+98         OPTIONS NODATE MPRINT MERGENOBY=WARN VARINITCHK=WARN NOFULLSTIMER;
+99         *ODS _ALL_ CLOSE;
+100        
+101        
+102        LIBNAME ucl "/home/u63529063/bios669/FinalProject/data/sasdatasets" ;
+NOTE: Libref UCL refers to the same physical library as OUT.
+NOTE: Libref UCL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/u63529063/bios669/FinalProject/data/sasdatasets
+103        
+104        DATA gk;
+105        	SET ucl.goalkeeping;
+106        	DROP serial;
+107        RUN;
+
+NOTE: There were 53 observations read from the data set UCL.GOALKEEPING.
+NOTE: The data set WORK.GK has 53 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+2                                                          The SAS System
+
+      
+
+108        
+109        
+110        PROC SQL;
+111        	CREATE TABLE top_gks AS
+112        		SELECT
+113        			player_name,
+114        			club,
+115        			saved,
+116        			match_played,
+117        			conceded,
+118        			cleansheets,
+119        			saved/match_played AS saved_per_game FORMAT=8.2,
+120        			conceded/match_played AS conceded_per_game FORMAT=8.2,
+121        			cleansheets/match_played AS avg_cleansheets FORMAT=8.2
+122        		FROM gk
+123        		WHERE
+124        			player_name NOT IN ("Courtois") AND
+125        			match_played >= 5
+126        		ORDER BY
+127        			saved_per_game DESC,
+128        			conceded_per_game ASC,
+129        			avg_cleansheets DESC;
+NOTE: Table WORK.TOP_GKS created, with 26 rows and 9 columns.
+
+130        QUIT;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+131        
+132        PROC PRINT DATA=top_gks;
+133        RUN;
+
+NOTE: There were 26 observations read from the data set WORK.TOP_GKS.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.04 seconds
+      
+
+134        
+135        /*RTF output, since there are some "weird" characters in player and club names*/
+136        OPTIONS MISSING=' ';
+137        ODS RTF FILE="&outdir/Outputs/&job._&onyen..RTF" STYLE=JOURNAL BODYTITLE;
+NOTE: Writing RTF Body file: /home/u63529063/bios669/FinalProject/Outputs/proj1_madhurir.RTF
+138        
+139        TITLE "2021/2022 UEFA Champions League: Top Performing Goalkeepers";
+140        FOOTNOTE1 "Table 1.";
+141        FOOTNOTE2 " ";
+142        FOOTNOTE3 "Job &job._&onyen run on &sysdate at &systime";
+143        PROC REPORT DATA=top_gks(obs=10);
+144        	COLUMN (player_name club) ('Statistics' saved_per_game conceded_per_game avg_cleansheets);
+145        	DEFINE player_name / DISPLAY "Player"
+146        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=4CM]
+147        					     STYLE(HEADER)=[fontsize=9pt fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+148        	DEFINE club / DISPLAY "Club"
+3                                                          The SAS System
+
+149        					     STYLE(COLUMN)=[fontsize=8pt just=center]
+150        					     STYLE(HEADER)=[fontsize=9pt fontweight=bold just=center vjust=b JUST=CENTER];
+151        	DEFINE saved_per_game / DISPLAY "Saves per game"
+152        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+153        					     STYLE(HEADER)=[fontsize=9pt fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+154        	DEFINE conceded_per_game / DISPLAY "Goals Conceded /per game"
+155        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+156        					     STYLE(HEADER)=[fontsize=9pt fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+157        	DEFINE avg_cleansheets / DISPLAY "Average/Clean Sheets"
+158        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+159        					     STYLE(HEADER)=[fontsize=9pt fontweight=bold just=center vjust=b];
+160        	COMPUTE saved_per_game;
+161        		IF (saved_per_game >= 4) THEN DO;
+162        			CALL DEFINE(_ROW_,"STYLE","STYLE=[BACKGROUND=cxD5F5E3]");
+163        		END;
+164        	ENDCOMP;
+165        RUN;
+
+NOTE: There were 10 observations read from the data set WORK.TOP_GKS.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+166        
+167        	
+168        ODS RTF CLOSE;
+169        
+170        proc printto; run;
+

@@ -1,0 +1,1077 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+74       !                                                                                          /*opens a log file to write to*/
+75         
+76         *********************************************************************
+77         *  Assignment:    Final Project
+78         *
+79         *  Description:   Part 0: CSV -> SAS datasets
+80         *
+81         *  Name:          Madhuri Raman
+82         *
+83         *  Date:          April 30th, 2024
+84         *-------------------------------------------------------------------
+85         *  Job name:      proj1.sas
+86         *
+87         *  Purpose:       Convert csv data files to sas datasets and save permanently.
+88         *
+89         *  Language:      SAS, VERSION 9.4
+90         *
+91         *  Input:         UCL datasets			
+92         *
+93         *  Output:        SAS datasets saved to outdir
+94         *
+95         ********************************************************************;
+96         
+97         OPTIONS NODATE MPRINT MERGENOBY=WARN VARINITCHK=WARN NOFULLSTIMER;
+98         
+99         *ODS _ALL_ CLOSE;
+100        
+101        LIBNAME out "&outdir.";
+NOTE: Libref OUT refers to the same physical library as _TEMP16.
+NOTE: Libref OUT was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/u63529063/bios669/FinalProject/data/sasdatasets
+102        
+103        %MACRO csv_to_sas(ds_name=);
+104        	PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/&ds_name..csv"
+105        	        	OUT=&ds_name.
+106        		        DBMS=CSV
+107        	        	REPLACE;
+108        	     GETNAMES=YES;
+109        	RUN;
+110        	DATA out.&ds_name.;
+111           		SET &ds_name.;
+112        	RUN;
+113        %MEND csv_to_sas;
+2                                                          The SAS System
+
+114        
+115        %csv_to_sas(ds_name=attacking);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/attacking.csv" OUT=attacking DBMS=CSV 
+REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+116         /**********************************************************************
+117         *   PRODUCT:   SAS
+118         *   VERSION:   9.4
+119         *   CREATOR:   External File Interface
+120         *   DATE:      26APR24
+121         *   DESC:      Generated SAS Datastep Code
+122         *   TEMPLATE SOURCE:  (None Specified.)
+123         ***********************************************************************/
+124            data WORK.ATTACKING    ;
+MPRINT(CSV_TO_SAS):   data WORK.ATTACKING ;
+125            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+126            infile '/home/u63529063/bios669/FinalProject/data/csvs/attacking.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+126      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/attacking.csv' delimiter = ',' MISSOVER DSD 
+lrecl=32767 firstobs=2 ;
+127               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+128               informat player_name $17. ;
+MPRINT(CSV_TO_SAS):   informat player_name $17. ;
+129               informat club $11. ;
+MPRINT(CSV_TO_SAS):   informat club $11. ;
+130               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+131               informat assists best32. ;
+MPRINT(CSV_TO_SAS):   informat assists best32. ;
+132               informat corner_taken best32. ;
+MPRINT(CSV_TO_SAS):   informat corner_taken best32. ;
+133               informat offsides best32. ;
+MPRINT(CSV_TO_SAS):   informat offsides best32. ;
+134               informat dribbles best32. ;
+MPRINT(CSV_TO_SAS):   informat dribbles best32. ;
+135               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+136               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+137               format player_name $17. ;
+MPRINT(CSV_TO_SAS):   format player_name $17. ;
+138               format club $11. ;
+MPRINT(CSV_TO_SAS):   format club $11. ;
+139               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+140               format assists best12. ;
+MPRINT(CSV_TO_SAS):   format assists best12. ;
+141               format corner_taken best12. ;
+MPRINT(CSV_TO_SAS):   format corner_taken best12. ;
+142               format offsides best12. ;
+MPRINT(CSV_TO_SAS):   format offsides best12. ;
+143               format dribbles best12. ;
+3                                                          The SAS System
+
+MPRINT(CSV_TO_SAS):   format dribbles best12. ;
+144               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+145            input
+146                        serial
+147                        player_name  $
+148                        club  $
+149                        position  $
+150                        assists
+151                        corner_taken
+152                        offsides
+153                        dribbles
+154                        match_played
+155            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ assists corner_taken offsides dribbles match_played ;
+156            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+157            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/attacking.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/attacking.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=7571
+
+NOTE: 176 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/attacking.csv'.
+      The minimum record length was 32.
+      The maximum record length was 53.
+NOTE: The data set WORK.ATTACKING has 176 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+176 rows created in WORK.ATTACKING from /home/u63529063/bios669/FinalProject/data/csvs/attacking.csv.
+  
+  
+  
+NOTE: WORK.ATTACKING data set was successfully created.
+NOTE: The data set WORK.ATTACKING has 176 observations and 9 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.attacking;
+MPRINT(CSV_TO_SAS):   SET attacking;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 176 observations read from the data set WORK.ATTACKING.
+NOTE: The data set OUT.ATTACKING has 176 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+4                                                          The SAS System
+
+
+158        %csv_to_sas(ds_name=attempts);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/attempts.csv" OUT=attempts DBMS=CSV 
+REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+159         /**********************************************************************
+160         *   PRODUCT:   SAS
+161         *   VERSION:   9.4
+162         *   CREATOR:   External File Interface
+163         *   DATE:      26APR24
+164         *   DESC:      Generated SAS Datastep Code
+165         *   TEMPLATE SOURCE:  (None Specified.)
+166         ***********************************************************************/
+167            data WORK.ATTEMPTS    ;
+MPRINT(CSV_TO_SAS):   data WORK.ATTEMPTS ;
+168            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+169            infile '/home/u63529063/bios669/FinalProject/data/csvs/attempts.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+169      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/attempts.csv' delimiter = ',' MISSOVER DSD lrecl=32767 
+firstobs=2 ;
+170               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+171               informat player_name $17. ;
+MPRINT(CSV_TO_SAS):   informat player_name $17. ;
+172               informat club $11. ;
+MPRINT(CSV_TO_SAS):   informat club $11. ;
+173               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+174               informat total_attempts best32. ;
+MPRINT(CSV_TO_SAS):   informat total_attempts best32. ;
+175               informat on_target best32. ;
+MPRINT(CSV_TO_SAS):   informat on_target best32. ;
+176               informat off_target best32. ;
+MPRINT(CSV_TO_SAS):   informat off_target best32. ;
+177               informat blocked best32. ;
+MPRINT(CSV_TO_SAS):   informat blocked best32. ;
+178               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+179               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+180               format player_name $17. ;
+MPRINT(CSV_TO_SAS):   format player_name $17. ;
+181               format club $11. ;
+MPRINT(CSV_TO_SAS):   format club $11. ;
+182               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+183               format total_attempts best12. ;
+MPRINT(CSV_TO_SAS):   format total_attempts best12. ;
+184               format on_target best12. ;
+MPRINT(CSV_TO_SAS):   format on_target best12. ;
+185               format off_target best12. ;
+MPRINT(CSV_TO_SAS):   format off_target best12. ;
+186               format blocked best12. ;
+5                                                          The SAS System
+
+MPRINT(CSV_TO_SAS):   format blocked best12. ;
+187               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+188            input
+189                        serial
+190                        player_name  $
+191                        club  $
+192                        position  $
+193                        total_attempts
+194                        on_target
+195                        off_target
+196                        blocked
+197                        match_played
+198            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ total_attempts on_target off_target blocked match_played ;
+199            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+200            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/attempts.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/attempts.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=26Apr2024:16:39:12,
+      File Size (bytes)=23498
+
+NOTE: 546 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/attempts.csv'.
+      The minimum record length was 31.
+      The maximum record length was 57.
+NOTE: The data set WORK.ATTEMPTS has 546 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+546 rows created in WORK.ATTEMPTS from /home/u63529063/bios669/FinalProject/data/csvs/attempts.csv.
+  
+  
+  
+NOTE: WORK.ATTEMPTS data set was successfully created.
+NOTE: The data set WORK.ATTEMPTS has 546 observations and 9 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.05 seconds
+      
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.attempts;
+MPRINT(CSV_TO_SAS):   SET attempts;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 546 observations read from the data set WORK.ATTEMPTS.
+NOTE: The data set OUT.ATTEMPTS has 546 observations and 9 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+6                                                          The SAS System
+
+
+201        %csv_to_sas(ds_name=defending);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/defending.csv" OUT=defending DBMS=CSV 
+REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+202         /**********************************************************************
+203         *   PRODUCT:   SAS
+204         *   VERSION:   9.4
+205         *   CREATOR:   External File Interface
+206         *   DATE:      26APR24
+207         *   DESC:      Generated SAS Datastep Code
+208         *   TEMPLATE SOURCE:  (None Specified.)
+209         ***********************************************************************/
+210            data WORK.DEFENDING    ;
+MPRINT(CSV_TO_SAS):   data WORK.DEFENDING ;
+211            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+212            infile '/home/u63529063/bios669/FinalProject/data/csvs/defending.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+212      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/defending.csv' delimiter = ',' MISSOVER DSD 
+lrecl=32767 firstobs=2 ;
+213               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+214               informat player_name $14. ;
+MPRINT(CSV_TO_SAS):   informat player_name $14. ;
+215               informat club $11. ;
+MPRINT(CSV_TO_SAS):   informat club $11. ;
+216               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+217               informat balls_recoverd best32. ;
+MPRINT(CSV_TO_SAS):   informat balls_recoverd best32. ;
+218               informat tackles best32. ;
+MPRINT(CSV_TO_SAS):   informat tackles best32. ;
+219               informat t_won best32. ;
+MPRINT(CSV_TO_SAS):   informat t_won best32. ;
+220               informat t_lost best32. ;
+MPRINT(CSV_TO_SAS):   informat t_lost best32. ;
+221               informat clearance_attempted best32. ;
+MPRINT(CSV_TO_SAS):   informat clearance_attempted best32. ;
+222               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+223               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+224               format player_name $14. ;
+MPRINT(CSV_TO_SAS):   format player_name $14. ;
+225               format club $11. ;
+MPRINT(CSV_TO_SAS):   format club $11. ;
+226               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+227               format balls_recoverd best12. ;
+MPRINT(CSV_TO_SAS):   format balls_recoverd best12. ;
+228               format tackles best12. ;
+MPRINT(CSV_TO_SAS):   format tackles best12. ;
+229               format t_won best12. ;
+7                                                          The SAS System
+
+MPRINT(CSV_TO_SAS):   format t_won best12. ;
+230               format t_lost best12. ;
+MPRINT(CSV_TO_SAS):   format t_lost best12. ;
+231               format clearance_attempted best12. ;
+MPRINT(CSV_TO_SAS):   format clearance_attempted best12. ;
+232               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+233            input
+234                        serial
+235                        player_name  $
+236                        club  $
+237                        position  $
+238                        balls_recoverd
+239                        tackles
+240                        t_won
+241                        t_lost
+242                        clearance_attempted
+243                        match_played
+244            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ balls_recoverd tackles t_won t_lost clearance_attempted 
+match_played ;
+245            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+246            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/defending.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/defending.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=28813
+
+NOTE: 627 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/defending.csv'.
+      The minimum record length was 33.
+      The maximum record length was 59.
+NOTE: The data set WORK.DEFENDING has 627 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+627 rows created in WORK.DEFENDING from /home/u63529063/bios669/FinalProject/data/csvs/defending.csv.
+  
+  
+  
+NOTE: WORK.DEFENDING data set was successfully created.
+NOTE: The data set WORK.DEFENDING has 627 observations and 10 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.05 seconds
+      cpu time            0.05 seconds
+      
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.defending;
+MPRINT(CSV_TO_SAS):   SET defending;
+MPRINT(CSV_TO_SAS):   RUN;
+
+8                                                          The SAS System
+
+NOTE: There were 627 observations read from the data set WORK.DEFENDING.
+NOTE: The data set OUT.DEFENDING has 627 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+247        %csv_to_sas(ds_name=disciplinary);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv" OUT=disciplinary 
+DBMS=CSV REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+248         /**********************************************************************
+249         *   PRODUCT:   SAS
+250         *   VERSION:   9.4
+251         *   CREATOR:   External File Interface
+252         *   DATE:      26APR24
+253         *   DESC:      Generated SAS Datastep Code
+254         *   TEMPLATE SOURCE:  (None Specified.)
+255         ***********************************************************************/
+256            data WORK.DISCIPLINARY    ;
+MPRINT(CSV_TO_SAS):   data WORK.DISCIPLINARY ;
+257            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+258            infile '/home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+258      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv' delimiter = ',' MISSOVER DSD 
+lrecl=32767 firstobs=2 ;
+259               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+260               informat player_name $14. ;
+MPRINT(CSV_TO_SAS):   informat player_name $14. ;
+261               informat club $11. ;
+MPRINT(CSV_TO_SAS):   informat club $11. ;
+262               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+263               informat fouls_committed best32. ;
+MPRINT(CSV_TO_SAS):   informat fouls_committed best32. ;
+264               informat fouls_suffered best32. ;
+MPRINT(CSV_TO_SAS):   informat fouls_suffered best32. ;
+265               informat red best32. ;
+MPRINT(CSV_TO_SAS):   informat red best32. ;
+266               informat yellow best32. ;
+MPRINT(CSV_TO_SAS):   informat yellow best32. ;
+267               informat minutes_played best32. ;
+MPRINT(CSV_TO_SAS):   informat minutes_played best32. ;
+268               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+269               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+270               format player_name $14. ;
+MPRINT(CSV_TO_SAS):   format player_name $14. ;
+271               format club $11. ;
+MPRINT(CSV_TO_SAS):   format club $11. ;
+272               format position $10. ;
+9                                                          The SAS System
+
+MPRINT(CSV_TO_SAS):   format position $10. ;
+273               format fouls_committed best12. ;
+MPRINT(CSV_TO_SAS):   format fouls_committed best12. ;
+274               format fouls_suffered best12. ;
+MPRINT(CSV_TO_SAS):   format fouls_suffered best12. ;
+275               format red best12. ;
+MPRINT(CSV_TO_SAS):   format red best12. ;
+276               format yellow best12. ;
+MPRINT(CSV_TO_SAS):   format yellow best12. ;
+277               format minutes_played best12. ;
+MPRINT(CSV_TO_SAS):   format minutes_played best12. ;
+278               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+279            input
+280                        serial
+281                        player_name  $
+282                        club  $
+283                        position  $
+284                        fouls_committed
+285                        fouls_suffered
+286                        red
+287                        yellow
+288                        minutes_played
+289                        match_played
+290            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ fouls_committed fouls_suffered red yellow minutes_played 
+match_played ;
+291            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+292            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=27426
+
+NOTE: 584 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv'.
+      The minimum record length was 35.
+      The maximum record length was 61.
+NOTE: The data set WORK.DISCIPLINARY has 584 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+584 rows created in WORK.DISCIPLINARY from /home/u63529063/bios669/FinalProject/data/csvs/disciplinary.csv.
+  
+  
+  
+NOTE: WORK.DISCIPLINARY data set was successfully created.
+NOTE: The data set WORK.DISCIPLINARY has 584 observations and 10 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.05 seconds
+      
+10                                                         The SAS System
+
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.disciplinary;
+MPRINT(CSV_TO_SAS):   SET disciplinary;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 584 observations read from the data set WORK.DISCIPLINARY.
+NOTE: The data set OUT.DISCIPLINARY has 584 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+293        %csv_to_sas(ds_name=distribution);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/distribution.csv" OUT=distribution 
+DBMS=CSV REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+294         /**********************************************************************
+295         *   PRODUCT:   SAS
+296         *   VERSION:   9.4
+297         *   CREATOR:   External File Interface
+298         *   DATE:      26APR24
+299         *   DESC:      Generated SAS Datastep Code
+300         *   TEMPLATE SOURCE:  (None Specified.)
+301         ***********************************************************************/
+302            data WORK.DISTRIBUTION    ;
+MPRINT(CSV_TO_SAS):   data WORK.DISTRIBUTION ;
+303            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+304            infile '/home/u63529063/bios669/FinalProject/data/csvs/distribution.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+304      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/distribution.csv' delimiter = ',' MISSOVER DSD 
+lrecl=32767 firstobs=2 ;
+305               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+306               informat player_name $15. ;
+MPRINT(CSV_TO_SAS):   informat player_name $15. ;
+307               informat club $16. ;
+MPRINT(CSV_TO_SAS):   informat club $16. ;
+308               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+309               informat pass_accuracy best32. ;
+MPRINT(CSV_TO_SAS):   informat pass_accuracy best32. ;
+310               informat pass_attempted best32. ;
+MPRINT(CSV_TO_SAS):   informat pass_attempted best32. ;
+311               informat pass_completed best32. ;
+MPRINT(CSV_TO_SAS):   informat pass_completed best32. ;
+312               informat cross_accuracy best32. ;
+MPRINT(CSV_TO_SAS):   informat cross_accuracy best32. ;
+313               informat cross_attempted best32. ;
+MPRINT(CSV_TO_SAS):   informat cross_attempted best32. ;
+314               informat cross_complted best32. ;
+MPRINT(CSV_TO_SAS):   informat cross_complted best32. ;
+315               informat freekicks_taken best32. ;
+11                                                         The SAS System
+
+MPRINT(CSV_TO_SAS):   informat freekicks_taken best32. ;
+316               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+317               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+318               format player_name $15. ;
+MPRINT(CSV_TO_SAS):   format player_name $15. ;
+319               format club $16. ;
+MPRINT(CSV_TO_SAS):   format club $16. ;
+320               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+321               format pass_accuracy best12. ;
+MPRINT(CSV_TO_SAS):   format pass_accuracy best12. ;
+322               format pass_attempted best12. ;
+MPRINT(CSV_TO_SAS):   format pass_attempted best12. ;
+323               format pass_completed best12. ;
+MPRINT(CSV_TO_SAS):   format pass_completed best12. ;
+324               format cross_accuracy best12. ;
+MPRINT(CSV_TO_SAS):   format cross_accuracy best12. ;
+325               format cross_attempted best12. ;
+MPRINT(CSV_TO_SAS):   format cross_attempted best12. ;
+326               format cross_complted best12. ;
+MPRINT(CSV_TO_SAS):   format cross_complted best12. ;
+327               format freekicks_taken best12. ;
+MPRINT(CSV_TO_SAS):   format freekicks_taken best12. ;
+328               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+329            input
+330                        serial
+331                        player_name  $
+332                        club  $
+333                        position  $
+334                        pass_accuracy
+335                        pass_attempted
+336                        pass_completed
+337                        cross_accuracy
+338                        cross_attempted
+339                        cross_complted
+340                        freekicks_taken
+341                        match_played
+342            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ pass_accuracy pass_attempted pass_completed cross_accuracy 
+cross_attempted cross_complted freekicks_taken match_played ;
+343            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+344            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/distribution.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/distribution.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=33943
+
+NOTE: 608 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/distribution.csv'.
+      The minimum record length was 41.
+      The maximum record length was 69.
+12                                                         The SAS System
+
+NOTE: The data set WORK.DISTRIBUTION has 608 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+608 rows created in WORK.DISTRIBUTION from /home/u63529063/bios669/FinalProject/data/csvs/distribution.csv.
+  
+  
+  
+NOTE: WORK.DISTRIBUTION data set was successfully created.
+NOTE: The data set WORK.DISTRIBUTION has 608 observations and 12 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.06 seconds
+      
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.distribution;
+MPRINT(CSV_TO_SAS):   SET distribution;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 608 observations read from the data set WORK.DISTRIBUTION.
+NOTE: The data set OUT.DISTRIBUTION has 608 observations and 12 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+345        %csv_to_sas(ds_name=goalkeeping);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv" OUT=goalkeeping 
+DBMS=CSV REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+346         /**********************************************************************
+347         *   PRODUCT:   SAS
+348         *   VERSION:   9.4
+349         *   CREATOR:   External File Interface
+350         *   DATE:      26APR24
+351         *   DESC:      Generated SAS Datastep Code
+352         *   TEMPLATE SOURCE:  (None Specified.)
+353         ***********************************************************************/
+354            data WORK.GOALKEEPING    ;
+MPRINT(CSV_TO_SAS):   data WORK.GOALKEEPING ;
+355            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+356            infile '/home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+356      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv' delimiter = ',' MISSOVER DSD 
+lrecl=32767 firstobs=2 ;
+357               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+358               informat player_name $17. ;
+MPRINT(CSV_TO_SAS):   informat player_name $17. ;
+359               informat club $16. ;
+13                                                         The SAS System
+
+MPRINT(CSV_TO_SAS):   informat club $16. ;
+360               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+361               informat saved best32. ;
+MPRINT(CSV_TO_SAS):   informat saved best32. ;
+362               informat conceded best32. ;
+MPRINT(CSV_TO_SAS):   informat conceded best32. ;
+363               informat saved_penalties best32. ;
+MPRINT(CSV_TO_SAS):   informat saved_penalties best32. ;
+364               informat cleansheets best32. ;
+MPRINT(CSV_TO_SAS):   informat cleansheets best32. ;
+365               informat "punches made"N best32. ;
+MPRINT(CSV_TO_SAS):   informat "punches made"N best32. ;
+366               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+367               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+368               format player_name $17. ;
+MPRINT(CSV_TO_SAS):   format player_name $17. ;
+369               format club $16. ;
+MPRINT(CSV_TO_SAS):   format club $16. ;
+370               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+371               format saved best12. ;
+MPRINT(CSV_TO_SAS):   format saved best12. ;
+372               format conceded best12. ;
+MPRINT(CSV_TO_SAS):   format conceded best12. ;
+373               format saved_penalties best12. ;
+MPRINT(CSV_TO_SAS):   format saved_penalties best12. ;
+374               format cleansheets best12. ;
+MPRINT(CSV_TO_SAS):   format cleansheets best12. ;
+375               format "punches made"N best12. ;
+MPRINT(CSV_TO_SAS):   format "punches made"N best12. ;
+376               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+377            input
+378                        serial
+379                        player_name  $
+380                        club  $
+381                        position  $
+382                        saved
+383                        conceded
+384                        saved_penalties
+385                        cleansheets
+386                        "punches made"N
+387                        match_played
+388            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ saved conceded saved_penalties cleansheets "punches made"N 
+match_played ;
+389            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+390            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+14                                                         The SAS System
+
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=2548
+
+NOTE: 53 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv'.
+      The minimum record length was 36.
+      The maximum record length was 56.
+NOTE: The data set WORK.GOALKEEPING has 53 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+53 rows created in WORK.GOALKEEPING from /home/u63529063/bios669/FinalProject/data/csvs/goalkeeping.csv.
+  
+  
+  
+NOTE: WORK.GOALKEEPING data set was successfully created.
+NOTE: The data set WORK.GOALKEEPING has 53 observations and 10 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.03 seconds
+      
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.goalkeeping;
+MPRINT(CSV_TO_SAS):   SET goalkeeping;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 53 observations read from the data set WORK.GOALKEEPING.
+NOTE: The data set OUT.GOALKEEPING has 53 observations and 10 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+391        %csv_to_sas(ds_name=goals);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/goals.csv" OUT=goals DBMS=CSV REPLACE;
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+392         /**********************************************************************
+393         *   PRODUCT:   SAS
+394         *   VERSION:   9.4
+395         *   CREATOR:   External File Interface
+396         *   DATE:      26APR24
+397         *   DESC:      Generated SAS Datastep Code
+398         *   TEMPLATE SOURCE:  (None Specified.)
+399         ***********************************************************************/
+400            data WORK.GOALS    ;
+MPRINT(CSV_TO_SAS):   data WORK.GOALS ;
+401            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+402            infile '/home/u63529063/bios669/FinalProject/data/csvs/goals.csv' delimiter = ',' MISSOVER DSD lrecl=32767 firstobs=2
+402      !  ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/goals.csv' delimiter = ',' MISSOVER DSD lrecl=32767 
+firstobs=2 ;
+15                                                         The SAS System
+
+403               informat serial best32. ;
+MPRINT(CSV_TO_SAS):   informat serial best32. ;
+404               informat player_name $17. ;
+MPRINT(CSV_TO_SAS):   informat player_name $17. ;
+405               informat club $11. ;
+MPRINT(CSV_TO_SAS):   informat club $11. ;
+406               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+407               informat goals best32. ;
+MPRINT(CSV_TO_SAS):   informat goals best32. ;
+408               informat right_foot best32. ;
+MPRINT(CSV_TO_SAS):   informat right_foot best32. ;
+409               informat left_foot best32. ;
+MPRINT(CSV_TO_SAS):   informat left_foot best32. ;
+410               informat headers best32. ;
+MPRINT(CSV_TO_SAS):   informat headers best32. ;
+411               informat others best32. ;
+MPRINT(CSV_TO_SAS):   informat others best32. ;
+412               informat inside_area best32. ;
+MPRINT(CSV_TO_SAS):   informat inside_area best32. ;
+413               informat outside_areas best32. ;
+MPRINT(CSV_TO_SAS):   informat outside_areas best32. ;
+414               informat penalties best32. ;
+MPRINT(CSV_TO_SAS):   informat penalties best32. ;
+415               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+416               format serial best12. ;
+MPRINT(CSV_TO_SAS):   format serial best12. ;
+417               format player_name $17. ;
+MPRINT(CSV_TO_SAS):   format player_name $17. ;
+418               format club $11. ;
+MPRINT(CSV_TO_SAS):   format club $11. ;
+419               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+420               format goals best12. ;
+MPRINT(CSV_TO_SAS):   format goals best12. ;
+421               format right_foot best12. ;
+MPRINT(CSV_TO_SAS):   format right_foot best12. ;
+422               format left_foot best12. ;
+MPRINT(CSV_TO_SAS):   format left_foot best12. ;
+423               format headers best12. ;
+MPRINT(CSV_TO_SAS):   format headers best12. ;
+424               format others best12. ;
+MPRINT(CSV_TO_SAS):   format others best12. ;
+425               format inside_area best12. ;
+MPRINT(CSV_TO_SAS):   format inside_area best12. ;
+426               format outside_areas best12. ;
+MPRINT(CSV_TO_SAS):   format outside_areas best12. ;
+427               format penalties best12. ;
+MPRINT(CSV_TO_SAS):   format penalties best12. ;
+428               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+429            input
+430                        serial
+431                        player_name  $
+432                        club  $
+433                        position  $
+434                        goals
+16                                                         The SAS System
+
+435                        right_foot
+436                        left_foot
+437                        headers
+438                        others
+439                        inside_area
+440                        outside_areas
+441                        penalties
+442                        match_played
+443            ;
+MPRINT(CSV_TO_SAS):   input serial player_name $ club $ position $ goals right_foot left_foot headers others inside_area 
+outside_areas penalties match_played ;
+444            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+445            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/goals.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/goals.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=9147
+
+NOTE: 183 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/goals.csv'.
+      The minimum record length was 39.
+      The maximum record length was 60.
+NOTE: The data set WORK.GOALS has 183 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+183 rows created in WORK.GOALS from /home/u63529063/bios669/FinalProject/data/csvs/goals.csv.
+  
+  
+  
+NOTE: WORK.GOALS data set was successfully created.
+NOTE: The data set WORK.GOALS has 183 observations and 13 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+MPRINT(CSV_TO_SAS):    ;
+MPRINT(CSV_TO_SAS):   DATA out.goals;
+MPRINT(CSV_TO_SAS):   SET goals;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 183 observations read from the data set WORK.GOALS.
+NOTE: The data set OUT.GOALS has 183 observations and 13 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+446        %csv_to_sas(ds_name=key_stats);
+MPRINT(CSV_TO_SAS):   PROC IMPORT DATAFILE="/home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv" OUT=key_stats DBMS=CSV 
+REPLACE;
+17                                                         The SAS System
+
+MPRINT(CSV_TO_SAS):   ADLM;
+MPRINT(CSV_TO_SAS):   GETNAMES=YES;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+447         /**********************************************************************
+448         *   PRODUCT:   SAS
+449         *   VERSION:   9.4
+450         *   CREATOR:   External File Interface
+451         *   DATE:      26APR24
+452         *   DESC:      Generated SAS Datastep Code
+453         *   TEMPLATE SOURCE:  (None Specified.)
+454         ***********************************************************************/
+455            data WORK.KEY_STATS    ;
+MPRINT(CSV_TO_SAS):   data WORK.KEY_STATS ;
+456            %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+457            infile '/home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv' delimiter = ',' MISSOVER DSD lrecl=32767
+457      ! firstobs=2 ;
+MPRINT(CSV_TO_SAS):   infile '/home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv' delimiter = ',' MISSOVER DSD 
+lrecl=32767 firstobs=2 ;
+458               informat player_name $17. ;
+MPRINT(CSV_TO_SAS):   informat player_name $17. ;
+459               informat club $11. ;
+MPRINT(CSV_TO_SAS):   informat club $11. ;
+460               informat position $10. ;
+MPRINT(CSV_TO_SAS):   informat position $10. ;
+461               informat minutes_played best32. ;
+MPRINT(CSV_TO_SAS):   informat minutes_played best32. ;
+462               informat match_played best32. ;
+MPRINT(CSV_TO_SAS):   informat match_played best32. ;
+463               informat goals best32. ;
+MPRINT(CSV_TO_SAS):   informat goals best32. ;
+464               informat assists best32. ;
+MPRINT(CSV_TO_SAS):   informat assists best32. ;
+465               informat distance_covered best32. ;
+MPRINT(CSV_TO_SAS):   informat distance_covered best32. ;
+466               format player_name $17. ;
+MPRINT(CSV_TO_SAS):   format player_name $17. ;
+467               format club $11. ;
+MPRINT(CSV_TO_SAS):   format club $11. ;
+468               format position $10. ;
+MPRINT(CSV_TO_SAS):   format position $10. ;
+469               format minutes_played best12. ;
+MPRINT(CSV_TO_SAS):   format minutes_played best12. ;
+470               format match_played best12. ;
+MPRINT(CSV_TO_SAS):   format match_played best12. ;
+471               format goals best12. ;
+MPRINT(CSV_TO_SAS):   format goals best12. ;
+472               format assists best12. ;
+MPRINT(CSV_TO_SAS):   format assists best12. ;
+473               format distance_covered best12. ;
+MPRINT(CSV_TO_SAS):   format distance_covered best12. ;
+474            input
+475                        player_name  $
+476                        club  $
+477                        position  $
+478                        minutes_played
+18                                                         The SAS System
+
+479                        match_played
+480                        goals
+481                        assists
+482                        distance_covered
+483            ;
+MPRINT(CSV_TO_SAS):   input player_name $ club $ position $ minutes_played match_played goals assists distance_covered ;
+484            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+MPRINT(CSV_TO_SAS):   if _ERROR_ then call symputx('_EFIERR_',1);
+485            run;
+MPRINT(CSV_TO_SAS):   run;
+
+NOTE: The infile '/home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv' is:
+      Filename=/home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv,
+      Owner Name=u63529063,Group Name=oda,
+      Access Permission=-rw-r--r--,
+      Last Modified=25Apr2024:11:22:45,
+      File Size (bytes)=32573
+
+NOTE: Invalid data for distance_covered in line 727 41-41.
+RULE:     ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8----+----9----+----0                      
+727       Sulejmani,Young Boys,Midfielder,7,1,0,0,- 41
+player_name=Sulejmani club=Young Boys position=Midfielder minutes_played=7 match_played=1 goals=0 assists=0 distance_covered=.
+_ERROR_=1 _N_=726
+NOTE: Invalid data for distance_covered in line 748 37-37.
+748       Zesiger,Young Boys,Defender,1,1,0,0,- 37
+player_name=Zesiger club=Young Boys position=Defender minutes_played=1 match_played=1 goals=0 assists=0 distance_covered=. _ERROR_=1
+_N_=747
+NOTE: 747 records were read from the infile '/home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv'.
+      The minimum record length was 31.
+      The maximum record length was 58.
+NOTE: The data set WORK.KEY_STATS has 747 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+Errors detected in submitted DATA step. Examine log.
+747 rows created in WORK.KEY_STATS from /home/u63529063/bios669/FinalProject/data/csvs/key_stats.csv.
+  
+  
+  
+ERROR: Import unsuccessful.  See SAS Log for details.
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.06 seconds
+      
+MPRINT(CSV_TO_SAS):    ;
+
+
+MPRINT(CSV_TO_SAS):   DATA out.key_stats;
+MPRINT(CSV_TO_SAS):   SET key_stats;
+MPRINT(CSV_TO_SAS):   RUN;
+
+NOTE: There were 747 observations read from the data set WORK.KEY_STATS.
+NOTE: The data set OUT.KEY_STATS has 747 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+19                                                         The SAS System
+
+      cpu time            0.00 seconds
+      
+
+486        
+487        proc printto; run;
+

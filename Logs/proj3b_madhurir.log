@@ -1,0 +1,207 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+74       !                                                             /*opens a log file to write to*/
+75         
+76         *********************************************************************
+77         *  Assignment:    Final Project
+78         *
+79         *  Description:   Part 3: Analysis for Attackers
+80         *
+81         *  Name:          Madhuri Raman
+82         *
+83         *  Date:          April 30th, 2024
+84         *-------------------------------------------------------------------
+85         *  Job name:      proj3b_madhurir.sas
+86         *
+87         *  Purpose:       Identify best assisters and passers on Real Madrid.
+88         *
+89         *  Language:      SAS, VERSION 9.4
+90         *
+91         *  Input:         UCL datasets:
+92         				  attempts			
+93         *
+94         *  Output:        RTF file
+95         *
+96         ********************************************************************;
+97         
+98         OPTIONS NODATE MPRINT MERGENOBY=WARN VARINITCHK=WARN NOFULLSTIMER;
+99         ODS _ALL_ CLOSE;
+100        
+101        
+102        LIBNAME ucl "/home/u63529063/bios669/FinalProject/data/sasdatasets" ;
+NOTE: Libref UCL was successfully assigned as follows: 
+      Engine:        V9 
+      Physical Name: /home/u63529063/bios669/FinalProject/data/sasdatasets
+103        
+104        DATA attack;
+105        	SET ucl.attacking;
+106        	DROP serial;
+107        RUN;
+
+NOTE: There were 176 observations read from the data set UCL.ATTACKING.
+NOTE: The data set WORK.ATTACK has 176 observations and 8 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+2                                                          The SAS System
+
+
+108        PROC SORT DATA=attack; BY player_name; RUN;
+
+NOTE: There were 176 observations read from the data set WORK.ATTACK.
+NOTE: The data set WORK.ATTACK has 176 observations and 8 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+109        DATA dis;
+110        	SET ucl.distribution;
+111        	DROP serial;
+112        RUN;
+
+NOTE: There were 608 observations read from the data set UCL.DISTRIBUTION.
+NOTE: The data set WORK.DIS has 608 observations and 11 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+113        PROC SORT DATA=dis; BY player_name; RUN;
+
+NOTE: There were 608 observations read from the data set WORK.DIS.
+NOTE: The data set WORK.DIS has 608 observations and 11 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+114        DATA merged_full;
+115        	MERGE attack(in=a) dis(in=d);
+116        	BY player_name;
+117        	IF a;
+118        	IF d;
+119        RUN;
+
+WARNING: Multiple lengths were specified for the variable club by input data set(s). This can cause truncation of data.
+NOTE: There were 176 observations read from the data set WORK.ATTACK.
+NOTE: There were 608 observations read from the data set WORK.DIS.
+NOTE: The data set WORK.MERGED_FULL has 171 observations and 15 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+120        
+121        
+122        PROC SQL;
+123        	CREATE TABLE best_passers AS
+124        		SELECT
+125        			player_name,
+126        			club,
+127        			position,
+128        			assists,
+129        			pass_accuracy/100 FORMAT=PERCENT8.1 AS PassAccuracy,
+130        			pass_completed/match_played FORMAT=8.2 AS AvgPassesCompletedPerGame
+3                                                          The SAS System
+
+131        		FROM merged_full
+132        		WHERE match_played >= 5
+133        		ORDER BY
+134        			PassAccuracy DESC,
+135        			assists DESC;
+NOTE: Table WORK.BEST_PASSERS created, with 149 rows and 6 columns.
+
+136        QUIT;
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+137        
+138        
+139        PROC PRINT DATA=best_passers(obs=30);
+140        RUN;
+
+WARNING: No output destinations active.
+NOTE: There were 30 observations read from the data set WORK.BEST_PASSERS.
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+141        
+142        
+143        PROC CORR DATA=best_passers out=corrout;
+144            VAR assists PassAccuracy AvgPassesCompletedPerGame;
+145        RUN;
+
+WARNING: No output destinations active.
+NOTE: The data set WORK.CORROUT has 6 observations and 5 variables.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+146        
+147        
+148        /*RTF output, since there are some "weird" characters in player and club names*/
+149        OPTIONS MISSING=' ';
+150        ODS RTF FILE="&outdir/Outputs/&job._&onyen..RTF" STYLE=JOURNAL BODYTITLE;
+NOTE: Writing RTF Body file: /home/u63529063/bios669/FinalProject/Outputs/proj3b_madhurir.RTF
+151        
+152        TITLE "2021/2022 UEFA Champions League: Best Passers in the Tournament";
+153        FOOTNOTE1 "Table 5.";
+154        FOOTNOTE2 " ";
+155        FOOTNOTE3 "Job &job._&onyen run on &sysdate at &systime";
+156        PROC REPORT DATA=best_passers(OBS=30);
+157        	COLUMN (player_name club position) ('Pass Statistics' assists PassAccuracy AvgPassesCompletedPerGame);
+158        	DEFINE player_name / DISPLAY "Player"
+159        					     STYLE(COLUMN)=[fontsize=8pt just=left CELLWIDTH=1.5CM]
+160        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+161        	DEFINE club / DISPLAY "Club"
+162        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+163        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b JUST=CENTER CELLWIDTH=2CM];
+164        	DEFINE position / DISPLAY "Position"
+4                                                          The SAS System
+
+165        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+166        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b JUST=CENTER CELLWIDTH=2CM];
+167        	DEFINE assists / DISPLAY "Assists"
+168        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=1CM]
+169        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=1CM];
+170        	DEFINE PassAccuracy / DISPLAY "Pass Accuracy"
+171        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=2CM]
+172        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=2CM];
+173        	DEFINE AvgPassesCompletedPerGame / DISPLAY "Average Passes /Completed per game"
+174        					     STYLE(COLUMN)=[fontsize=8pt just=center CELLWIDTH=3CM]
+175        					     STYLE(HEADER)=[fontweight=bold just=center vjust=b CELLWIDTH=3CM];
+176        	COMPUTE PassAccuracy;
+177        		IF (PassAccuracy > 0.916) THEN DO;
+178        			CALL DEFINE(_ROW_,"STYLE","STYLE=[BACKGROUND=cxEDEDED]");
+179        		END;
+180        	ENDCOMP;
+181        	COMPUTE club;
+182        		IF (club = "Real Madrid") THEN DO;
+183        			CALL DEFINE(_ROW_,"STYLE","STYLE=[fontweight=bold]");
+184        		END;
+185        	ENDCOMP;
+186        	
+187        RUN;
+
+NOTE: There were 30 observations read from the data set WORK.BEST_PASSERS.
+NOTE: PROCEDURE REPORT used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+188        
+189        	
+190        ODS RTF CLOSE;
+191        
+192        proc printto; run;
+
